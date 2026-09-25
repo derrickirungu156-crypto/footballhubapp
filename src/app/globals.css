@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-pitch-950 text-mist-100 font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-floodlight-500 text-pitch-950;
+  }
+  :focus-visible {
+    outline: 2px solid theme("colors.floodlight.400");
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-edit {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .rule {
+    @apply border-t border-pitch-700;
+  }
+}

@@ -1,0 +1,97 @@
+// Phase 1 schema: just enough to make FootballHub's public pages real.
+// Analyst Studio, content pipeline, media, OAuth and job tables land in
+// later phases (see /ARCHITECTURE.md) and will extend this same database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FULL_TIME
+  POSTPONED
+  CANCELLED
+}
+
+model Competition {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  country   String?
+  logoUrl   String?
+  matches   Match[]
+  createdAt DateTime @default(now())
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  shortName    String?
+  logoUrl      String?
+  country      String?
+  homeMatches  Match[]  @relation("HomeTeam")
+  awayMatches  Match[]  @relation("AwayTeam")
+  players      Player[]
+  createdAt    DateTime @default(now())
+}
+
+model Player {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  position  String?
+  photoUrl  String?
+  teamId    String?
+  team      Team?    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Match {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  competitionId String?
+  competition   Competition? @relation(fields: [competitionId], references: [id])
+  homeTeamId    String
+  homeTeam      Team         @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId    String
+  awayTeam      Team         @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeScore     Int?
+  awayScore     Int?
+  status        MatchStatus  @default(SCHEDULED)
+  kickoffAt     DateTime
+  venue         String?
+  dataSource    String?      // e.g. "football-data" | "manual" | "youtube-inferred"
+  analyses      Analysis[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+enum AnalysisStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Analysis {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  matchId         String
+  match           Match          @relation(fields: [matchId], references: [id])
+  headline        String
+  summary         String
+  body            String         // rendered markdown/rich text for Phase 1
+  heroImageUrl    String?
+  videoEmbedUrl   String?
+  status          AnalysisStatus @default(DRAFT)
+  seoTitle        String?
+  seoDescription  String?
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
