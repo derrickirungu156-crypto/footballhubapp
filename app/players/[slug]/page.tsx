@@ -6,9 +6,10 @@ import { getPlayer, getTeam } from "@/lib/data";
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const player = await getPlayer(params.slug);
+  const { slug } = await params;
+  const player = await getPlayer(slug);
   if (!player) return { title: "Player not found" };
   return { title: player.name, description: `Profile and analysis for ${player.name}.` };
 }
@@ -16,9 +17,10 @@ export async function generateMetadata({
 export default async function PlayerDetailPage({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const player = await getPlayer(params.slug);
+  const { slug } = await params;
+  const player = await getPlayer(slug);
   if (!player) notFound();
 
   const team = await getTeam(player.teamSlug);

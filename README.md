@@ -20,9 +20,9 @@ This replaces the earlier `naustric-crypto/footballhub` prototype.
 - A Prisma schema (`prisma/schema.prisma`) covering competitions, teams,
   players, matches and analyses — the core tables the rest of the spec
   builds on.
-- `src/lib/data.ts` currently returns typed mock data shaped exactly like
-  the Prisma models, so every page already renders real content. Swapping
-  it for live Prisma queries later is a drop-in change (see below).
+- `src/lib/data.ts` currently returns typed sample data shaped like the
+  Prisma models. A site-wide notice identifies these records as unverified
+  examples; they must not be treated as current results or reporting.
 
 ## Not in Phase 1 yet
 
@@ -44,9 +44,10 @@ npm run prisma:migrate
 npm run dev
 ```
 
-Until you run migrations and seed real data, the site runs entirely on
-the mock data in `src/lib/data.ts` — nothing here requires a database to
-look at.
+The current pages render clearly labeled sample data and do not query the
+database yet. Configuring Postgres alone will not replace those samples;
+the data layer still needs to be wired to Prisma before verified content
+can be published.
 
 ## Swapping mock data for Prisma
 

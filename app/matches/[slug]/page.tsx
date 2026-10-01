@@ -8,9 +8,10 @@ import AnalysisCard from "@/components/cards/AnalysisCard";
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const match = await getMatch(params.slug);
+  const { slug } = await params;
+  const match = await getMatch(slug);
   if (!match) return { title: "Match not found" };
   return {
     title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
@@ -21,9 +22,10 @@ export async function generateMetadata({
 export default async function MatchDetailPage({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const match = await getMatch(params.slug);
+  const { slug } = await params;
+  const match = await getMatch(slug);
   if (!match) notFound();
 
   const analyses = await getAnalysesForMatch(match.slug);

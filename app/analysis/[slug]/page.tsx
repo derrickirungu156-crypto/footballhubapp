@@ -8,9 +8,10 @@ import type { AnalysisPoint, EvidenceKind } from "@/lib/types";
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const analysis = await getAnalysis(params.slug);
+  const { slug } = await params;
+  const analysis = await getAnalysis(slug);
   if (!analysis) return { title: "Analysis not found" };
   return {
     title: analysis.headline,
@@ -49,9 +50,10 @@ function PointList({ points }: { points: AnalysisPoint[] }) {
 export default async function AnalysisDetailPage({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const analysis = await getAnalysis(params.slug);
+  const { slug } = await params;
+  const analysis = await getAnalysis(slug);
   if (!analysis) notFound();
 
   const { match } = analysis;

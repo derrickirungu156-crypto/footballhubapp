@@ -8,9 +8,10 @@ import PlayerCard from "@/components/cards/PlayerCard";
 export async function generateMetadata({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const team = await getTeam(params.slug);
+  const { slug } = await params;
+  const team = await getTeam(slug);
   if (!team) return { title: "Team not found" };
   return { title: team.name, description: `Results, squad and analysis for ${team.name}.` };
 }
@@ -18,9 +19,10 @@ export async function generateMetadata({
 export default async function TeamDetailPage({
   params
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const teamData = await getTeam(params.slug);
+  const { slug } = await params;
+  const teamData = await getTeam(slug);
   if (!teamData) notFound();
 
   const [matches, squad] = await Promise.all([

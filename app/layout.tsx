@@ -34,6 +34,9 @@ export default function RootLayout({
     <html lang="en" className={`${archivo.variable} ${ibmPlex.variable}`}>
       <body className="flex min-h-screen flex-col">
         <Header />
+        <aside className="border-b border-warn/40 bg-warn/10 px-5 py-2 text-center text-xs text-mist-300" role="status">
+          <strong className="font-semibold text-floodlight-400">Sample content:</strong> match results and analysis are unverified examples, not live football data.
+        </aside>
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

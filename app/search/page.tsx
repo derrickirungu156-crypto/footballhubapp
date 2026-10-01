@@ -4,12 +4,13 @@ export const metadata: Metadata = {
   title: "Search"
 };
 
-export default function SearchPage({
+export default async function SearchPage({
   searchParams
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const query = searchParams.q ?? "";
+  const { q } = await searchParams;
+  const query = q ?? "";
 
   return (
     <div className="container-edit py-12">
